@@ -15,22 +15,44 @@ def words_in_the_song(tune, excess):
     return word_count
 
 #This function counts the frequency of a single word or multiple words depending on the input
-#from the song
+#from the tune and returns a dictionary of words and their frequencies
 def count_of_special_words(tune,words):
-    count = 0
+    word_counter = {}
+    sv = 0
     for word in words:
-        count += tune.count(word)
-        
-    return count
+        current = tune.count(word)
+        sv += current
+        word_counter[word] = current
+       
+    word_counter["combined"] = sv
+    
+    return word_counter
 
-#This function simple retrieves a percentage value
-def get_percentage(total_words, words):
-    return words/total_words * 100
+#This function simple retrieves a dictionary of percentage values for each special word as well as the combined percentage 
+def get_percentages(total_words, special_words_count):
+    percentages = {}
+    for entry in special_words_count:
+        percentages[entry] = str(round(special_words_count[entry] / total_words * 100, 2)) + "%"
+    return percentages
 
 filename = input("Type in the name of your file with the song lyrics: ")
+print()
 song = get_song(filename)
 special_words = input("Type in the word(s) you want to check the frequency of separated by a space: ").split()
-filler = int(input("Type in an estimate of words that should not be a part of your total count (just type in 0 if this does not apply): "))
+print()
+
+filler = int(input("Type in an estimate of words that should not be a part of your total count (just type in 0 if this does not apply or unsure): "))
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
 words_in_the_song = words_in_the_song(song,filler)
-special_word_count = (count_of_special_words(song, special_words))
-print('The percentage for the words you wanted to check in the song is: {}%.'.format(round(get_percentage(words_in_the_song, special_word_count),2)))
+print('There are {} total words in the song.'.format(words_in_the_song))
+print()
+
+
+sw_counter = count_of_special_words(song, special_words)
+
+
+print("The count of each word in the song is:", sw_counter )
+print()
+print("The percentages for each word are:",get_percentages(words_in_the_song, sw_counter ))
+
